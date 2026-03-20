@@ -50,13 +50,23 @@ if st.button("Ask", type="primary", use_container_width=True):
                 )
                 data = response.json()
 
-                st.success("Answer:")
-                st.markdown(f"### {data['answer']}")
-                
-                st.caption(f"⏱ Answered in {data['time_taken_seconds']} seconds")
+                if "answer" in data:
+                    st.success("Answer:")
+                    st.markdown(f"### {data['answer']}")
+                    st.caption(f"⏱ Answered in {data['time_taken_seconds']} seconds")
+
+                    # Save to history
+                    if "history" not in st.session_state:
+                        st.session_state.history = []
+                    st.session_state.history.append({
+                        "question": question,
+                        "answer": data["answer"]
+                    })
+                else:
+                    st.error(f"Unexpected response: {data}")
 
             except requests.exceptions.ConnectionError:
-                st.error("Cannot connect to the API. Make sure uvicorn is running locally.")
+                st.error("Cannot connect to the API.")
             except Exception as e:
                 st.error(f"Something went wrong: {e}")
 
@@ -69,4 +79,4 @@ if st.session_state.history:
     st.markdown("**Recent questions:**")
     for item in reversed(st.session_state.history[-5:]):
         with st.expander(f"Q: {item['question']}"):
-            st.write(item['answer'])
+            st.write(item["answer"])
