@@ -13,7 +13,8 @@ load_dotenv()
 app = FastAPI(
     title="SQL Insight Agent",
     description="Ask your database anything in plain English",
-    version="1.0.0"
+    version="1.0.0",
+    root_path_in_servers=False
 )
 
 # Initialize the agent once when the server starts
