@@ -51,6 +51,7 @@ Plain English Answer
 
 ## Live Demo
 
+- **Showcase site:** https://sql-insight-ui.onrender.com — an interactive single-page site with replays of real agent runs, a self-correction walkthrough, an explorable schema map, and a live-API mode. The page itself lives at `docs/index.html` and is served by `ui_server.py`.
 - **API:** https://sql-insight-agent.onrender.com
 - **API Docs:** https://sql-insight-agent.onrender.com/docs
 - **Health Check:** https://sql-insight-agent.onrender.com/health
@@ -95,7 +96,13 @@ uvicorn main:app --reload
 
 **7. Run the UI (separate terminal)**
 
-Point the UI at your local API, then start Streamlit:
+To serve the showcase site (what https://sql-insight-ui.onrender.com runs):
+
+```bash
+uvicorn ui_server:app --port 8501
+```
+
+Or run the original Streamlit UI — point it at your local API first:
 
 ```bash
 export API_URL=http://localhost:8000  # Mac/Linux

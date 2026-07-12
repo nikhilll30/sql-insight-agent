@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from langchain_community.utilities import SQLDatabase
 from langchain_community.agent_toolkits import create_sql_agent
@@ -25,6 +26,16 @@ app = FastAPI(
     description="Ask your database anything in plain English",
     version="1.0.0",
     root_path_in_servers=False
+)
+
+# Allow the static showcase site (GitHub Pages / local file) to call the API
+# from the browser. The API is read-only over a public sample database, so a
+# wildcard origin is safe here.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["GET", "POST"],
+    allow_headers=["Content-Type"],
 )
 
 # Initialize the agent once when the server starts
