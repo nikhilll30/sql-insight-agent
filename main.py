@@ -4,10 +4,20 @@ from langchain_community.utilities import SQLDatabase
 from langchain_community.agent_toolkits import create_sql_agent
 from langchain_anthropic import ChatAnthropic
 from dotenv import load_dotenv
+from pathlib import Path
 import os
 import time
 
-load_dotenv()
+BASE_DIR = Path(__file__).resolve().parent
+load_dotenv(BASE_DIR / ".env")
+
+DATABASE_PATH = Path(
+    os.getenv("DATABASE_PATH", str(BASE_DIR / "chinook.db"))
+).resolve()
+ANTHROPIC_MODEL = os.getenv("ANTHROPIC_MODEL", "claude-sonnet-4-6")
+
+if not DATABASE_PATH.is_file():
+    raise RuntimeError(f"Database file not found: {DATABASE_PATH}")
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -21,10 +31,10 @@ app = FastAPI(
 # (not on every request — that would be slow)
 print("Loading database and agent...")
 
-db = SQLDatabase.from_uri("sqlite:///chinook.db")
+db = SQLDatabase.from_uri(f"sqlite:///{DATABASE_PATH.as_posix()}")
 
 llm = ChatAnthropic(
-    model="claude-sonnet-4-20250514",
+    model=ANTHROPIC_MODEL,
     anthropic_api_key=os.getenv("ANTHROPIC_API_KEY"),
     temperature=0
 )

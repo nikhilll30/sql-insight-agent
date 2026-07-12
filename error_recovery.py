@@ -2,14 +2,16 @@ from langchain_community.utilities import SQLDatabase
 from langchain_community.agent_toolkits import create_sql_agent
 from langchain_anthropic import ChatAnthropic
 from dotenv import load_dotenv
+from pathlib import Path
 import os
 
-load_dotenv()
+BASE_DIR = Path(__file__).resolve().parent
+load_dotenv(BASE_DIR / ".env")
 
-db = SQLDatabase.from_uri("sqlite:///chinook.db")
+db = SQLDatabase.from_uri(f"sqlite:///{(BASE_DIR / 'chinook.db').as_posix()}")
 
 llm = ChatAnthropic(
-    model="claude-sonnet-4-20250514",
+    model=os.getenv("ANTHROPIC_MODEL", "claude-sonnet-4-6"),
     anthropic_api_key=os.getenv("ANTHROPIC_API_KEY"),
     temperature=0
 )

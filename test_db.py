@@ -10,7 +10,8 @@ api_key = os.getenv("ANTHROPIC_API_KEY")
 print(f"API key loaded: {'YES' if api_key else 'NO - check your .env file'}")
 
 # Connect to the Chinook database
-engine = create_engine("sqlite:///chinook.db")
+database_path = Path(__file__).resolve().parent / "chinook.db"
+engine = create_engine(f"sqlite:///{database_path.as_posix()}")
 
 # 3 test queries to explore the data
 queries = [

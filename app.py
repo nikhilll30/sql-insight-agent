@@ -1,12 +1,17 @@
 import streamlit as st
 import requests
+import os
 import time
+
+API_URL = os.getenv(
+    "API_URL", "https://sql-insight-agent.onrender.com"
+).rstrip("/")
 
 def check_backend_status():
     """Checks the backend's status endpoint, returns True if up, False if down/asleep."""
     try:
         response = requests.get(
-            "https://sql-insight-agent.onrender.com/health",
+            f"{API_URL}/health",
             timeout=5
         )
         if response.status_code == 200 and response.json().get("status") == "ok":
@@ -84,7 +89,7 @@ if st.button("Ask", type="primary", use_container_width=True):
             with st.spinner("Claude is thinking..."):
                 try:
                     response = requests.post(
-                        "https://sql-insight-agent.onrender.com/query",
+                        f"{API_URL}/query",
                         json={"question": question},
                         timeout=120
                     )

@@ -84,7 +84,8 @@ curl -L -o chinook.db https://github.com/lerocha/chinook-database/raw/master/Chi
 
 **5. Set up environment variables**
 ```bash
-echo "ANTHROPIC_API_KEY=your-key-here" > .env
+cp .env.example .env
+# Then replace "your-key-here" in .env with your Anthropic API key.
 ```
 
 **6. Run the API**
@@ -93,9 +94,23 @@ uvicorn main:app --reload
 ```
 
 **7. Run the UI (separate terminal)**
+
+Point the UI at your local API, then start Streamlit:
+
 ```bash
+export API_URL=http://localhost:8000  # Mac/Linux
 streamlit run app.py
 ```
+
+On Windows PowerShell:
+
+```bash
+$env:API_URL="http://localhost:8000"
+streamlit run app.py
+```
+
+`ANTHROPIC_MODEL` is optional and defaults to `claude-sonnet-4-6`. Set it in
+`.env` to switch models without changing the source code.
 
 ## Run with Docker
 ```bash
